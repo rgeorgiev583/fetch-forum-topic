@@ -5,9 +5,13 @@ spam_topic_page_url_template='http://forum.animes-bg.com/viewtopic.php?f=18&t=75
 spam_step=15
 spam_target_directory=.
 
-while getopts :j:p:s:t: option
+while getopts :Hj:p:s:t: option
 do
     case $option in
+        H)
+            span_hosts=-H
+            ;;
+
         j)
             max_job_count=$OPTARG
             ;;
@@ -48,7 +52,7 @@ do
     spam_offset=$(( spam_step * (spam_page_number - 1) ))
     job_count=$((job_count + 1))
     {
-        wget -EHkKp -o "${spam_page_target_directory}/wget-log" -P "${spam_page_target_directory}" "${spam_topic_page_url_template}${spam_offset}"
+        wget -EkKp ${span_hosts} -o "${spam_page_target_directory}/wget-log" -P "${spam_page_target_directory}" "${spam_topic_page_url_template}${spam_offset}"
         kill -USR1 $$
     } &
 done

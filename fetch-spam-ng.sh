@@ -36,8 +36,19 @@ spam_max_page_number=$1
 [[ -z $spam_max_page_number ]] && exit 1
 shift
 
+function decrement_job_count
+{
+    job_count=$((job_count - 1))
+}
+
+function wget_spam_page_and_notify
+{
+    wget -EkKp ${span_hosts} -o "${spam_page_target_directory}/wget-log" -P "${spam_page_target_directory}" "${spam_topic_page_url_template}${spam_offset}"
+    kill -USR1 $$
+}
+
 job_count=0
-trap job_count=$((job_count - 1)) SIGUSR1
+trap decrement_job_count SIGUSR1
 
 for spam_page_number in $(seq 1 $spam_max_page_number)
 do
@@ -51,10 +62,7 @@ do
     [[ $? -ne 0 ]] && continue
     spam_offset=$(( spam_step * (spam_page_number - 1) ))
     job_count=$((job_count + 1))
-    {
-        wget -EkKp ${span_hosts} -o "${spam_page_target_directory}/wget-log" -P "${spam_page_target_directory}" "${spam_topic_page_url_template}${spam_offset}"
-        kill -USR1 $$
-    } &
+    wget_spam_page_and_notify &
 done
 
 while ! wait

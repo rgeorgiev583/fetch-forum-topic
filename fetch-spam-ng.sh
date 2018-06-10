@@ -1,5 +1,7 @@
 #!/bin/bash
 
+script_name=$0
+
 max_job_count=$(grep -c ^processor /proc/cpuinfo)
 spam_topic_page_url_template='http://forum.animes-bg.com/viewtopic.php?f=18&t=75541&start='
 spam_step=15
@@ -33,7 +35,11 @@ done
 shift $((OPTIND - 1))
 
 spam_max_page_number=$1
-[[ -z $spam_max_page_number ]] && exit 1
+if [[ -z $spam_max_page_number ]]
+then
+    echo "${script_name}: no maximum page number specified"
+    exit 1
+fi
 shift
 
 function decrement_job_count

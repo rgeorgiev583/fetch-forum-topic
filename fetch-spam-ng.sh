@@ -41,10 +41,10 @@ trap job_count=$((job_count - 1)) SIGUSR1
 
 for spam_page_number in $(seq 1 $spam_max_page_number)
 do
-    if [[ $job_count -ge $max_job_count ]]
-    then
+    while [[ $job_count -ge $max_job_count ]]
+    do
         wait -n
-    fi
+    done
 
     spam_page_target_directory="${spam_target_directory}/${spam_page_number}"
     mkdir -p "${spam_page_target_directory}"

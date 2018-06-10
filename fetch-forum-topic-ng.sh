@@ -6,7 +6,7 @@ max_job_count=$(grep -c ^processor /proc/cpuinfo)
 forum_topic_posts_step=15
 target_directory=.
 
-while getopts :Hj:s:t:v option
+while getopts :Hj:p:s:t:v option
 do
     case $option in
         H)
@@ -15,6 +15,10 @@ do
 
         j)
             max_job_count=$OPTARG
+            ;;
+
+        p)
+            forum_topic_max_page_number=$OPTARG
             ;;
 
         s)
@@ -41,13 +45,18 @@ then
 fi
 shift
 
-forum_topic_max_page_number=$1
-if [[ -z $forum_topic_max_page_number ]]
+if [[ -z $forum_topic_max_page_number && $# -eq 0 ]]
 then
-    echo "${script_name}: no maximum page number specified"
+    echo "${script_name}: either specify a maximum page number or a list of page numbers of forum topic pages"
     exit 2
 fi
-shift
+
+if [[ -n $forum_topic_max_page_number ]]
+then
+    forum_topic_page_numbers=$(seq 1 $forum_topic_max_page_number)
+else
+    forum_topic_page_numbers=$@
+fi
 
 function decrement_job_count
 {
@@ -71,7 +80,7 @@ function wget_forum_topic_page_and_notify
 job_count=0
 trap decrement_job_count SIGUSR1
 
-for forum_topic_page_number in $(seq 1 $forum_topic_max_page_number)
+for forum_topic_page_number in $forum_topic_page_numbers
 do
     while [[ $job_count -ge $max_job_count ]]
     do

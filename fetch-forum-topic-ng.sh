@@ -57,6 +57,13 @@ if [[ -z $forum_topic_max_page_number && -f "${target_directory}/${failure_list_
 then
     echo "Found a list of failed downloads; will reattempt them..."
     forum_topic_page_numbers=$(< "${target_directory}/${failure_list_filename}")
+    
+    i=1
+    while [[ -f "${target_directory}/${failure_list_filename}.${i}" ]]
+    do
+        i=$((i + 1))
+    done
+    mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
 fi
 
 if [[ -z $forum_topic_page_numbers ]]

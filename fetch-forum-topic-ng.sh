@@ -51,13 +51,6 @@ then
 fi
 shift
 
-if [[ -n $forum_topic_max_page_number ]]
-then
-    forum_topic_page_numbers=$(seq $forum_topic_min_page_number $forum_topic_max_page_number)
-else
-    forum_topic_page_numbers=$@
-fi
-
 if [[ -f "${target_directory}/${failure_list_filename}" ]]
 then
     echo "Found a list of failed downloads; will reattempt them..."
@@ -71,6 +64,13 @@ then
         i=$((i + 1))
     done
     mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
+fi
+
+if [[ -n $forum_topic_max_page_number ]]
+then
+    forum_topic_page_numbers="${forum_topic_page_numbers} $(seq $forum_topic_min_page_number $forum_topic_max_page_number)"
+else
+    forum_topic_page_numbers="${forum_topic_page_numbers} $@"
 fi
 
 if [[ -z $forum_topic_page_numbers ]]

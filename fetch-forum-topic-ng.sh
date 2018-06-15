@@ -56,7 +56,9 @@ fi
 if [[ -f "${target_directory}/${failure_list_filename}" ]]
 then
     echo "Found a list of failed downloads; will reattempt them..."
-    forum_topic_page_numbers="${forum_topic_page_numbers} $(< "${target_directory}/${failure_list_filename}")"
+    failed_page_numbers=$(< "${target_directory}/${failure_list_filename}")
+    echo "Pages for which download will be reattempted: ${failed_page_numbers}"
+    forum_topic_page_numbers="${forum_topic_page_numbers} ${failed_page_numbers}"
 
     i=1
     while [[ -f "${target_directory}/${failure_list_filename}.${i}" ]]

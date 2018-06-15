@@ -97,7 +97,7 @@ function wget_forum_topic_page_and_notify
     if [[ $? -ne 0 ]]
     then
         echo "${forum_topic_page_number}" >> "${target_directory}/${failure_list_filename}"
-        [[ -n $is_verbose_mode ]] && echo "${script_name}: failed to fetch page ${forum_topic_page_number}." >&2
+        echo "${script_name}: failed to fetch page ${forum_topic_page_number}" >&2
     else
         [[ -n $is_verbose_mode ]] && echo "Finished the fetching of page ${forum_topic_page_number}."
     fi

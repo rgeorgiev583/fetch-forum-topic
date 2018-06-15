@@ -4,10 +4,11 @@ script_name=$0
 failure_list_filename=failures.lst
 
 max_job_count=$(grep -c ^processor /proc/cpuinfo)
+forum_topic_min_page_number=1
 forum_topic_posts_step=15
 target_directory=.
 
-while getopts :Hj:p:s:t:v option
+while getopts :Hj:p:P:s:t:v option
 do
     case $option in
         H)
@@ -20,6 +21,10 @@ do
 
         p)
             forum_topic_max_page_number=$OPTARG
+            ;;
+
+        P)
+            forum_topic_min_page_number=$OPTARG
             ;;
 
         s)
@@ -48,7 +53,7 @@ shift
 
 if [[ -n $forum_topic_max_page_number ]]
 then
-    forum_topic_page_numbers=$(seq 1 $forum_topic_max_page_number)
+    forum_topic_page_numbers=$(seq $forum_topic_min_page_number $forum_topic_max_page_number)
 else
     forum_topic_page_numbers=$@
 fi

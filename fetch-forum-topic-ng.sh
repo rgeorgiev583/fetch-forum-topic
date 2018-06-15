@@ -1,6 +1,7 @@
 #!/bin/bash
 
 script_name=$0
+failure_list_filename=failures.lst
 
 max_job_count=$(grep -c ^processor /proc/cpuinfo)
 forum_topic_posts_step=15
@@ -52,6 +53,12 @@ else
     forum_topic_page_numbers=$@
 fi
 
+if [[ -z $forum_topic_max_page_number && -f "${target_directory}/${failure_list_filename}" ]]
+then
+    echo "Found a list of failed downloads; will reattempt them..."
+    forum_topic_page_numbers=$(< "${target_directory}/${failure_list_filename}")
+fi
+
 if [[ -z $forum_topic_page_numbers ]]
 then
     echo "${script_name}: no range specified of forum topic pages to download" >&2
@@ -73,7 +80,13 @@ function wget_forum_topic_page_and_notify
         echo "URL: ${forum_topic_page_url}"
     fi
     wget -EkKp ${span_hosts} -o "${forum_topic_page_target_directory}/wget-log" -P "${forum_topic_page_target_directory}" "${forum_topic_page_url}"
-    [[ -n $is_verbose_mode ]] && echo "Finished the fetching of page ${forum_topic_page_number}."
+    if [[ $? -ne 0 ]]
+    then
+        echo "${forum_topic_page_number}" >> "${target_directory}/${failure_list_filename}"
+        [[ -n $is_verbose_mode ]] && echo "${script_name}: failed to fetch page ${forum_topic_page_number}." >&2
+    else
+        [[ -n $is_verbose_mode ]] && echo "Finished the fetching of page ${forum_topic_page_number}."
+    fi
     kill -USR1 $$
 }
 

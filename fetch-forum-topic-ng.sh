@@ -45,17 +45,17 @@ then
 fi
 shift
 
-if [[ -z $forum_topic_max_page_number && $# -eq 0 ]]
-then
-    echo "${script_name}: either specify a maximum page number or a list of page numbers of forum topic pages"
-    exit 2
-fi
-
 if [[ -n $forum_topic_max_page_number ]]
 then
     forum_topic_page_numbers=$(seq 1 $forum_topic_max_page_number)
 else
     forum_topic_page_numbers=$@
+fi
+
+if [[ -z $forum_topic_page_numbers ]]
+then
+    echo "${script_name}: no range specified of forum topic pages to download"
+    exit 2
 fi
 
 function decrement_job_count

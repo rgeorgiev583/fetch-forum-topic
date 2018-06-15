@@ -94,7 +94,8 @@ function wget_forum_topic_page_and_notify
         echo "URL: ${forum_topic_page_url}"
     fi
     wget -EkKp ${span_hosts} -a "${forum_topic_page_target_directory}/wget-log" -P "${forum_topic_page_target_directory}" "${forum_topic_page_url}"
-    if [[ $? -ne 0 ]]
+    forum_topic_page_host=$(echo ${forum_topic_page_url} | cut -d/ -f3)
+    if [[ ! -d "${forum_topic_page_target_directory}/${forum_topic_page_host}" ]]
     then
         echo "${forum_topic_page_number}" >> "${target_directory}/${failure_list_filename}"
         echo "${script_name}: failed to fetch page ${forum_topic_page_number}" >&2

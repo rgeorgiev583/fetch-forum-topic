@@ -110,6 +110,7 @@ for forum_topic_page_number in $forum_topic_page_numbers; do
 	forum_topic_page_target_directory="${target_directory}/${forum_topic_page_number}"
 
 	if ! mkdir -p "${forum_topic_page_target_directory}"; then
+		echo "${script_name}: could not create target directory for page ${forum_topic_page_number}" >&2
 		continue
 	fi
 

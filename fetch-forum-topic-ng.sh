@@ -8,8 +8,12 @@ forum_topic_min_page_number=1
 forum_topic_posts_step=15
 target_directory=.
 
-while getopts :Hj:p:P:s:t:v option; do
+while getopts :fHj:p:P:s:t:v option; do
 	case $option in
+	f)
+		force=true
+		;;
+
 	H)
 		span_hosts=-H
 		;;
@@ -108,6 +112,10 @@ for forum_topic_page_number in $forum_topic_page_numbers; do
 	done
 
 	forum_topic_page_target_directory="${target_directory}/${forum_topic_page_number}"
+
+	if [[ -z ${force} && -d ${forum_topic_page_target_directory} ]]; then
+		continue
+	fi
 
 	if ! mkdir -p "${forum_topic_page_target_directory}"; then
 		echo "${script_name}: could not create target directory for page ${forum_topic_page_number}" >&2

@@ -3,7 +3,7 @@
 script_name=$0
 failure_list_filename=failures.lst
 
-max_job_count=$(grep -c ^processor /proc/cpuinfo)
+max_job_count=$(($(nproc) + 1))
 forum_topic_min_page_number=1
 forum_topic_posts_step=15
 target_directory=.

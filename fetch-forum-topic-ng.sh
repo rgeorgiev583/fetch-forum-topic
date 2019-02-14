@@ -39,7 +39,7 @@ while getopts :Hj:p:P:s:t:v option; do
 		;;
 
 	*)
-		echo "${script_name}: invalid options detected"
+		echo "${script_name}: invalid options detected" >&2
 		;;
 	esac
 done

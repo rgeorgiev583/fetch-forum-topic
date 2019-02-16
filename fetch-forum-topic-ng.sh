@@ -80,11 +80,6 @@ for forum_topic_page_range; do
 	forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_page_range_from}" "${forum_topic_page_range_to}")"
 done
 
-if [[ -z ${forum_topic_page_numbers} ]]; then
-	echo "error: no range of forum topic pages specified" >&2
-	exit 1
-fi
-
 function decrement_job_count() {
 	((job_count--))
 	[[ -n ${is_verbose_mode} ]] && echo "Job with pid $! has just finished its execution (${job_count} more jobs remaining)."

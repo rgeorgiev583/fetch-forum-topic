@@ -1,6 +1,5 @@
 #!/bin/bash
 
-script_name=$0
 failure_list_filename=failures.lst
 numeric_range_pattern='(([[:digit:]]+)\.\.)?([[:digit:]]+)'
 forum_topic_min_page_number=1
@@ -36,7 +35,7 @@ while getopts :fHj:p:P:s:t:v option; do
 		;;
 
 	*)
-		echo "${script_name}: invalid options detected" >&2
+		echo "error: invalid option: ${option}" >&2
 		exit 3
 		;;
 	esac
@@ -60,7 +59,7 @@ fi
 
 forum_topic_page_url_template=$1
 if [[ -z ${forum_topic_page_url_template} ]]; then
-	echo "${script_name}: no base URL for forum topic pages specified" >&2
+	echo "error: no base URL specified for forum topic pages" >&2
 	exit 1
 fi
 shift
@@ -83,7 +82,7 @@ for forum_topic_page_range; do
 done
 
 if [[ -z ${forum_topic_page_numbers} ]]; then
-	echo "${script_name}: no range specified of forum topic pages to download" >&2
+	echo "error: no range of forum topic pages specified" >&2
 	exit 2
 fi
 
@@ -105,7 +104,7 @@ function wget_forum_topic_page_and_notify() {
 	forum_topic_page_host=$(echo "${forum_topic_page_url}" | cut -d/ -f3)
 	if [[ ! -d "${forum_topic_page_target_directory}/${forum_topic_page_host}" ]]; then
 		echo "${forum_topic_page_number}" >>"${target_directory}/${failure_list_filename}"
-		echo "${script_name}: failed to fetch page ${forum_topic_page_number}" >&2
+		echo "error: failed to fetch page ${forum_topic_page_number}" >&2
 	else
 		[[ -n ${is_verbose_mode} ]] && echo "Finished the fetching of page ${forum_topic_page_number}."
 	fi
@@ -135,7 +134,7 @@ for forum_topic_page_number in ${forum_topic_page_numbers}; do
 	fi
 
 	if ! mkdir -p "${forum_topic_page_target_directory}"; then
-		echo "${script_name}: could not create target directory for page ${forum_topic_page_number}" >&2
+		echo "error: failed to create target directory for page ${forum_topic_page_number}" >&2
 		continue
 	fi
 

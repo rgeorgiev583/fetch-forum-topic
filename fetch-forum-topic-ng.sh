@@ -50,18 +50,19 @@ if [[ -z ${forum_topic_page_url_template} ]]; then
 fi
 shift
 
-if [[ -f ${target_directory}/${failure_list_file_basename} ]]; then
+failure_list_filename=${target_directory}/${failure_list_file_basename}
+if [[ -f ${failure_list_filename} ]]; then
 	echo "Found a list of failed downloads; will reattempt them..."
-	failed_page_numbers=$(<"${target_directory}/${failure_list_file_basename}")
+	failed_page_numbers=$(<"${failure_list_filename}")
 
 	echo "Pages for which download will be reattempted: ${failed_page_numbers//$'\n'/, }"
 	forum_topic_page_numbers="${forum_topic_page_numbers} ${failed_page_numbers}"
 
 	i=1
-	while [[ -e ${target_directory}/${failure_list_file_basename}.${i} ]]; do
+	while [[ -e ${failure_list_filename}.${i} ]]; do
 		((i++))
 	done
-	mv "${target_directory}/${failure_list_file_basename}" "${target_directory}/${failure_list_file_basename}.${i}"
+	mv "${failure_list_filename}" "${failure_list_filename}.${i}"
 fi
 
 for forum_topic_page_range; do

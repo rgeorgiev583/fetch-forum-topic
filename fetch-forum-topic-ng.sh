@@ -122,7 +122,14 @@ for forum_topic_page_number in ${forum_topic_page_numbers}; do
 	forum_topic_page_target_directory="${target_directory}/${forum_topic_page_number}"
 
 	if [[ -z ${force} && -d ${forum_topic_page_target_directory} ]]; then
-		continue
+		for failed_page_number in ${failed_page_numbers}; do
+			if [[ ${forum_topic_page_number} -eq ${failed_page_number} ]]; then
+				is_failed_page_number=true
+			fi
+		done
+		if [[ -z ${is_failed_page_number} ]]; then
+			continue
+		fi
 	fi
 
 	if ! mkdir -p "${forum_topic_page_target_directory}"; then

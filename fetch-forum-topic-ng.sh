@@ -62,7 +62,9 @@ if [[ -f ${failure_list_filename} ]]; then
 	while [[ -e ${failure_list_filename}.${i} ]]; do
 		((i++))
 	done
-	mv "${failure_list_filename}" "${failure_list_filename}.${i}"
+	if ! mv "${failure_list_filename}" "${failure_list_filename}.${i}"; then
+		echo "error: failed to rename list of failed downloads from ${failure_list_filename} to ${failure_list_filename}.${i}" >&2
+	fi
 fi
 
 for forum_topic_page_range; do

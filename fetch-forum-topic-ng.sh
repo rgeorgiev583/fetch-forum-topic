@@ -2,6 +2,7 @@
 
 script_name=$0
 failure_list_filename=failures.lst
+numeric_range_pattern='(([[:digit:]]+)\.\.)?([[:digit:]]+)'
 
 max_job_count=$(($(nproc) + 1))
 forum_topic_min_page_number=1
@@ -66,7 +67,6 @@ if [[ -f "${target_directory}/${failure_list_filename}" ]]; then
 	mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
 fi
 
-numeric_range_pattern='(([[:digit:]]+)\.\.)?([[:digit:]]+)'
 if [[ -n ${forum_topic_page_range} && ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
 	[[ -n ${BASH_REMATCH[2]} ]] && forum_topic_min_page_number=${BASH_REMATCH[2]}
 	[[ -n ${BASH_REMATCH[3]} ]] && forum_topic_max_page_number=${BASH_REMATCH[3]}

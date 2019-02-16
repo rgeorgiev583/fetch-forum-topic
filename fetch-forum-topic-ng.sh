@@ -54,15 +54,16 @@ if [[ -z ${forum_topic_page_url_template} ]]; then
 fi
 shift
 
-if [[ -f "${target_directory}/${failure_list_filename}" ]]; then
+if [[ -f ${target_directory}/${failure_list_filename} ]]; then
 	echo "Found a list of failed downloads; will reattempt them..."
 	failed_page_numbers=$(<"${target_directory}/${failure_list_filename}")
+
 	echo "Pages for which download will be reattempted: ${failed_page_numbers}"
 	forum_topic_page_numbers="${forum_topic_page_numbers} ${failed_page_numbers}"
 
 	i=1
-	while [[ -f "${target_directory}/${failure_list_filename}.${i}" ]]; do
-		i=$((i + 1))
+	while [[ -f ${target_directory}/${failure_list_filename}.${i} ]]; do
+		((i++))
 	done
 	mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
 fi
@@ -84,7 +85,7 @@ if [[ -z ${forum_topic_page_numbers} ]]; then
 fi
 
 function decrement_job_count() {
-	job_count=$((job_count - 1))
+	((job_count--))
 	[[ -n ${is_verbose_mode} ]] && echo "Job with pid $! has just finished its execution (${job_count} more jobs remaining)."
 }
 
@@ -125,7 +126,7 @@ for forum_topic_page_number in ${forum_topic_page_numbers}; do
 	fi
 
 	forum_topic_posts_offset=$((forum_topic_posts_step * (forum_topic_page_number - 1)))
-	job_count=$((job_count + 1))
+	((job_count++))
 	[[ -n ${is_verbose_mode} ]] && echo "Starting a new background job (${job_count} jobs total)."
 	wget_forum_topic_page_and_notify &
 done

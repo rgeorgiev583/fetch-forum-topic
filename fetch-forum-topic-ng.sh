@@ -23,11 +23,7 @@ while getopts :fHj:p:P:s:t:v option; do
 		;;
 
 	p)
-		forum_topic_max_page_number=$OPTARG
-		;;
-
-	P)
-		forum_topic_min_page_number=$OPTARG
+		forum_topic_page_range=$OPTARG
 		;;
 
 	s)
@@ -70,7 +66,13 @@ if [[ -f "${target_directory}/${failure_list_filename}" ]]; then
 	mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
 fi
 
-if [[ -n $forum_topic_max_page_number ]]; then
+numeric_range_pattern='(([[:digit:]]+)\.\.)?([[:digit:]]+)'
+if [[ -n $forum_topic_page_range && $forum_topic_page_range =~ $numeric_range_pattern ]]; then
+	[[ -n ${BASH_REMATCH[2]} ]] && forum_topic_min_page_number=${BASH_REMATCH[2]}
+	[[ -n ${BASH_REMATCH[3]} ]] && forum_topic_max_page_number=${BASH_REMATCH[3]}
+fi
+
+if [[ -n $forum_topic_min_page_number && -n $forum_topic_max_page_number ]]; then
 	forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_min_page_number}" "${forum_topic_max_page_number}")"
 else
 	forum_topic_page_numbers="${forum_topic_page_numbers} $*"

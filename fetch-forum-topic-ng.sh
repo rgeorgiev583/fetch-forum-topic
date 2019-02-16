@@ -6,7 +6,7 @@ numeric_range_pattern='(([[:digit:]]+)\.\.)?([[:digit:]]+)'
 
 max_job_count=$(($(nproc) + 1))
 forum_topic_min_page_number=1
-forum_topic_posts_step=15
+forum_topic_post_step=15
 target_directory=.
 
 while getopts :fHj:p:P:s:t:v option; do
@@ -28,7 +28,7 @@ while getopts :fHj:p:P:s:t:v option; do
 		;;
 
 	s)
-		forum_topic_posts_step=${OPTARG}
+		forum_topic_post_step=${OPTARG}
 		;;
 
 	t)
@@ -137,7 +137,7 @@ for forum_topic_page_number in ${forum_topic_page_numbers}; do
 		continue
 	fi
 
-	forum_topic_posts_offset=$((forum_topic_posts_step * (forum_topic_page_number - 1)))
+	forum_topic_posts_offset=$((forum_topic_post_step * (forum_topic_page_number - 1)))
 
 	((job_count++))
 	[[ -n ${is_verbose_mode} ]] && echo "Starting a new background job (${job_count} jobs total)."

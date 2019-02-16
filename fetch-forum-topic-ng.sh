@@ -65,7 +65,7 @@ fi
 shift
 
 for forum_topic_page_range; do
-	if [[ -n ${forum_topic_page_range} && ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
+	if [[ ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
 		if [[ -n ${BASH_REMATCH[2]} ]]; then
 			forum_topic_page_range_from=${BASH_REMATCH[2]}
 		else
@@ -74,7 +74,7 @@ for forum_topic_page_range; do
 		forum_topic_page_range_to=${BASH_REMATCH[3]}
 	fi
 
-	if [[ -n ${forum_topic_page_range_from} && -n ${forum_topic_page_range_to} ]]; then
+	if [[ -n ${forum_topic_page_range_to} ]]; then
 		forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_page_range_from}" "${forum_topic_page_range_to}")"
 	else
 		forum_topic_page_numbers="${forum_topic_page_numbers} $*"

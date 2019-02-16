@@ -58,7 +58,7 @@ if [[ -f ${target_directory}/${failure_list_filename} ]]; then
 	forum_topic_page_numbers="${forum_topic_page_numbers} ${failed_page_numbers}"
 
 	i=1
-	while [[ -f ${target_directory}/${failure_list_filename}.${i} ]]; do
+	while [[ -e ${target_directory}/${failure_list_filename}.${i} ]]; do
 		((i++))
 	done
 	mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"

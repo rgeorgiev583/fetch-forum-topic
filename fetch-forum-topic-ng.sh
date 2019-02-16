@@ -36,7 +36,7 @@ while getopts :fHj:p:P:s:t:v option; do
 
 	*)
 		echo "error: invalid option: ${option}" >&2
-		exit 3
+		exit 2
 		;;
 	esac
 done
@@ -83,7 +83,7 @@ done
 
 if [[ -z ${forum_topic_page_numbers} ]]; then
 	echo "error: no range of forum topic pages specified" >&2
-	exit 2
+	exit 1
 fi
 
 function decrement_job_count() {

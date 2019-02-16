@@ -72,13 +72,12 @@ for forum_topic_page_range; do
 			forum_topic_page_range_from=${forum_topic_min_page_number}
 		fi
 		forum_topic_page_range_to=${BASH_REMATCH[3]}
+	else
+		echo "error: invalid page range specification: ${forum_topic_page_range}" >&2
+		exit 1
 	fi
 
-	if [[ -n ${forum_topic_page_range_to} ]]; then
-		forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_page_range_from}" "${forum_topic_page_range_to}")"
-	else
-		forum_topic_page_numbers="${forum_topic_page_numbers} $*"
-	fi
+	forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_page_range_from}" "${forum_topic_page_range_to}")"
 done
 
 if [[ -z ${forum_topic_page_numbers} ]]; then

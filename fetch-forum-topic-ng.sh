@@ -89,7 +89,10 @@ function decrement_job_count() {
 }
 
 function wget_forum_topic_page_and_notify() {
+	forum_topic_page_number=$1
+	forum_topic_posts_offset=$((forum_topic_post_step * (forum_topic_page_number - 1)))
 	forum_topic_page_url=${forum_topic_page_url_template}${forum_topic_posts_offset}
+	forum_topic_page_target_directory="${target_directory}/${forum_topic_page_number}"
 
 	if [[ -n ${is_verbose_mode} ]]; then
 		echo "Starting the fetching of page ${forum_topic_page_number} into directory ${forum_topic_page_target_directory}..."
@@ -135,12 +138,10 @@ for forum_topic_page_number in ${forum_topic_page_numbers}; do
 		continue
 	fi
 
-	forum_topic_posts_offset=$((forum_topic_post_step * (forum_topic_page_number - 1)))
-
 	((job_count++))
 	[[ -n ${is_verbose_mode} ]] && echo "Starting a new background job (${job_count} jobs total)."
 
-	wget_forum_topic_page_and_notify &
+	wget_forum_topic_page_and_notify "${forum_topic_page_number}" &
 done
 
 while ! wait; do

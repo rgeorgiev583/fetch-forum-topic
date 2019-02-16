@@ -92,11 +92,14 @@ function decrement_job_count() {
 
 function wget_forum_topic_page_and_notify() {
 	forum_topic_page_url=${forum_topic_page_url_template}${forum_topic_posts_offset}
+
 	if [[ -n ${is_verbose_mode} ]]; then
 		echo "Starting the fetching of page ${forum_topic_page_number} into directory ${forum_topic_page_target_directory}..."
 		echo "URL: ${forum_topic_page_url}"
 	fi
+
 	wget -EkKp ${span_hosts} -a "${forum_topic_page_target_directory}/wget-log" -P "${forum_topic_page_target_directory}" "${forum_topic_page_url}"
+
 	forum_topic_page_host=$(echo "${forum_topic_page_url}" | cut -d/ -f3)
 	if [[ ! -d "${forum_topic_page_target_directory}/${forum_topic_page_host}" ]]; then
 		echo "${forum_topic_page_number}" >>"${target_directory}/${failure_list_filename}"
@@ -104,6 +107,7 @@ function wget_forum_topic_page_and_notify() {
 	else
 		[[ -n ${is_verbose_mode} ]] && echo "Finished the fetching of page ${forum_topic_page_number}."
 	fi
+
 	kill -USR1 $$
 }
 
@@ -127,8 +131,10 @@ for forum_topic_page_number in ${forum_topic_page_numbers}; do
 	fi
 
 	forum_topic_posts_offset=$((forum_topic_posts_step * (forum_topic_page_number - 1)))
+
 	((job_count++))
 	[[ -n ${is_verbose_mode} ]] && echo "Starting a new background job (${job_count} jobs total)."
+
 	wget_forum_topic_page_and_notify &
 done
 

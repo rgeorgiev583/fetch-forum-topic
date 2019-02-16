@@ -71,7 +71,7 @@ shift
 
 if [[ -n ${forum_topic_page_range} && ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
 	[[ -n ${BASH_REMATCH[2]} ]] && forum_topic_min_page_number=${BASH_REMATCH[2]}
-	[[ -n ${BASH_REMATCH[3]} ]] && forum_topic_max_page_number=${BASH_REMATCH[3]}
+	forum_topic_max_page_number=${BASH_REMATCH[3]}
 fi
 
 if [[ -n ${forum_topic_min_page_number} && -n ${forum_topic_max_page_number} ]]; then

@@ -43,6 +43,13 @@ done
 
 shift $((OPTIND - 1))
 
+forum_topic_page_url_template=$1
+if [[ -z ${forum_topic_page_url_template} ]]; then
+	echo "error: no base URL specified for forum topic pages" >&2
+	exit 1
+fi
+shift
+
 if [[ -f ${target_directory}/${failure_list_filename} ]]; then
 	echo "Found a list of failed downloads; will reattempt them..."
 	failed_page_numbers=$(<"${target_directory}/${failure_list_filename}")
@@ -56,13 +63,6 @@ if [[ -f ${target_directory}/${failure_list_filename} ]]; then
 	done
 	mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
 fi
-
-forum_topic_page_url_template=$1
-if [[ -z ${forum_topic_page_url_template} ]]; then
-	echo "error: no base URL specified for forum topic pages" >&2
-	exit 1
-fi
-shift
 
 for forum_topic_page_range; do
 	if [[ ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then

@@ -41,6 +41,7 @@ while getopts :fHj:p:P:s:t:v option; do
 
 	*)
 		echo "${script_name}: invalid options detected" >&2
+		exit 3
 		;;
 	esac
 done

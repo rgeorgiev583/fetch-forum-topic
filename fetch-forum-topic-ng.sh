@@ -3,9 +3,9 @@
 script_name=$0
 failure_list_filename=failures.lst
 numeric_range_pattern='(([[:digit:]]+)\.\.)?([[:digit:]]+)'
+forum_topic_min_page_number=1
 
 max_job_count=$(($(nproc) + 1))
-forum_topic_min_page_number=1
 forum_topic_post_step=15
 target_directory=.
 
@@ -21,10 +21,6 @@ while getopts :fHj:p:P:s:t:v option; do
 
 	j)
 		max_job_count=${OPTARG}
-		;;
-
-	p)
-		forum_topic_page_range=${OPTARG}
 		;;
 
 	s)
@@ -69,16 +65,22 @@ if [[ -z ${forum_topic_page_url_template} ]]; then
 fi
 shift
 
-if [[ -n ${forum_topic_page_range} && ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
-	[[ -n ${BASH_REMATCH[2]} ]] && forum_topic_min_page_number=${BASH_REMATCH[2]}
-	forum_topic_max_page_number=${BASH_REMATCH[3]}
-fi
+for forum_topic_page_range; do
+	if [[ -n ${forum_topic_page_range} && ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
+		if [[ -n ${BASH_REMATCH[2]} ]]; then
+			forum_topic_page_range_from=${BASH_REMATCH[2]}
+		else
+			forum_topic_page_range_from=${forum_topic_min_page_number}
+		fi
+		forum_topic_page_range_to=${BASH_REMATCH[3]}
+	fi
 
-if [[ -n ${forum_topic_min_page_number} && -n ${forum_topic_max_page_number} ]]; then
-	forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_min_page_number}" "${forum_topic_max_page_number}")"
-else
-	forum_topic_page_numbers="${forum_topic_page_numbers} $*"
-fi
+	if [[ -n ${forum_topic_page_range_from} && -n ${forum_topic_page_range_to} ]]; then
+		forum_topic_page_numbers="${forum_topic_page_numbers} $(seq "${forum_topic_page_range_from}" "${forum_topic_page_range_to}")"
+	else
+		forum_topic_page_numbers="${forum_topic_page_numbers} $*"
+	fi
+done
 
 if [[ -z ${forum_topic_page_numbers} ]]; then
 	echo "${script_name}: no range specified of forum topic pages to download" >&2

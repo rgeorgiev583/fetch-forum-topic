@@ -48,13 +48,6 @@ done
 
 shift $((OPTIND - 1))
 
-forum_topic_page_url_template=$1
-if [[ -z ${forum_topic_page_url_template} ]]; then
-	echo "${script_name}: no base URL for forum topic pages specified" >&2
-	exit 1
-fi
-shift
-
 if [[ -f ${target_directory}/${failure_list_filename} ]]; then
 	echo "Found a list of failed downloads; will reattempt them..."
 	failed_page_numbers=$(<"${target_directory}/${failure_list_filename}")
@@ -68,6 +61,13 @@ if [[ -f ${target_directory}/${failure_list_filename} ]]; then
 	done
 	mv "${target_directory}/${failure_list_filename}" "${target_directory}/${failure_list_filename}.${i}"
 fi
+
+forum_topic_page_url_template=$1
+if [[ -z ${forum_topic_page_url_template} ]]; then
+	echo "${script_name}: no base URL for forum topic pages specified" >&2
+	exit 1
+fi
+shift
 
 if [[ -n ${forum_topic_page_range} && ${forum_topic_page_range} =~ ${numeric_range_pattern} ]]; then
 	[[ -n ${BASH_REMATCH[2]} ]] && forum_topic_min_page_number=${BASH_REMATCH[2]}
